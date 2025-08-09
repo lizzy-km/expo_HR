@@ -1,75 +1,163 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import {Platform, RefreshControl, ScrollView, StatusBar, StyleSheet, Text, View,} from 'react-native';
+import {Colors, profileBackgroundColor} from "@/constants/Colors";
+import {useColorScheme} from "@/hooks/useColorScheme";
+import React from 'react';
+import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
+import {useGetUserQuery} from "@/services/query/getUserQuery";
+import {Image} from "expo-image";
+import {BlurView} from "expo-blur";
+import {LinearGradient} from "expo-linear-gradient";
+import UserProfile from "@/components/ui/UserProfile/UserProfile";
+import { UserDataType} from "@/constants/Types";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+
+
+    const colorScheme = useColorScheme();
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: Colors[colorScheme ?? 'light'].background,
+            alignItems: 'center',
+            justifyContent: 'center',
+            // paddingTop: StatusBar.currentHeight,
+
+        },
+        scrollView: {
+            backgroundColor: Colors[colorScheme ?? 'light'].background,
+            width: '100%',
+
+            paddingTop:Platform.select({
+                web:25
+            })
+        },
+        text: {
+            color: Colors[colorScheme ?? 'light'].text,
+        },
+        navigationContainer: {
+            backgroundColor: Colors[colorScheme ?? 'light'].background,
+            paddingInline:20,
+            justifyContent: 'space-between',
+            display: 'flex',
+        },
+        paragraph: {
+            padding: 16,
+            fontSize: 15,
+            textAlign: 'center',
+        },
+    });
+
+
+    const {data:userData,isLoading,refetch} =  useGetUserQuery();
+
+
+
+
+
+    return (
+        <SafeAreaProvider>
+            <SafeAreaView style={styles.container} edges={["top"]}>
+                <View style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: 50,
+                    zIndex:10,
+                    ...styles.navigationContainer
+                }}>
+
+                <View style={{
+                    height: 32,
+                    width: "auto",
+                    gap:8
+                }} >
+                  <UserProfile userData={userData} />
+                </View>
+
+                    <View>
+
+                    </View>
+
+                </View>
+                <ScrollView style={styles.scrollView}
+                            refreshControl={
+                                <RefreshControl refreshing={isLoading} onRefresh={refetch} />
+                            }
+                >
+
+
+                    <View style={{
+                        width: "100%",
+                        height: "auto",
+                        backgroundColor: '#d5d5d5',
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                        padding: 10,
+                        gap: 20
+                    }}>
+                        <View style={{
+                            width: "80%",
+                            height: 200,
+                            backgroundColor: Colors[colorScheme ?? 'light'].background
+                        }}>
+
+                            <Text style={styles.text}>Home screen</Text>
+
+                        </View>
+                        <View style={{
+                            width: "80%",
+                            height: 200,
+                            backgroundColor: Colors[colorScheme ?? 'light'].background
+                        }}>
+
+                            <Text style={styles.text}>Home screen</Text>
+
+                        </View>
+                        <View style={{
+                            width: "80%",
+                            height: 200,
+                            backgroundColor: Colors[colorScheme ?? 'light'].background
+                        }}>
+
+                            <Text style={styles.text}>Home screen</Text>
+
+                        </View>
+                        <View style={{
+                            width: "80%",
+                            height: 200,
+                            backgroundColor: Colors[colorScheme ?? 'light'].background
+                        }}>
+
+                            <Text style={styles.text}>Home screen</Text>
+
+                        </View>
+                        <View style={{
+                            width: "80%",
+                            height: 200,
+                            backgroundColor: Colors[colorScheme ?? 'light'].background
+                        }}>
+
+                            <Text style={styles.text}>Home screen</Text>
+
+                        </View>
+
+                    </View>
+
+                </ScrollView>
+
+            </SafeAreaView>
+        </SafeAreaProvider>
+
+
+    );
 }
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+
+
+
+
+
+
