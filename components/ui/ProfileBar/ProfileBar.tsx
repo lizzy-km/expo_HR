@@ -1,11 +1,10 @@
-import {Falsy, RecursiveArray, StyleProp, Text, View, ViewStyle} from "react-native";
+import {Platform, Text, View} from "react-native";
 import {Colors} from "@/constants/Colors";
 import React from "react";
 import moment from "moment/moment";
 import {useGetUserQuery} from "@/services/query/getUserQuery";
 import {useColorScheme} from "@/hooks/useColorScheme";
 import UserProfile from "../UserProfile/UserProfile";
-import {Style} from "domelementtype";
 
 
 export default function ProfileBar() {
@@ -23,6 +22,11 @@ export default function ProfileBar() {
             paddingInline: 20,
             justifyContent: 'space-between',
             display: 'flex',
+            marginTop:Platform.select({
+                web:10,
+                android:4,
+                ios:4,
+            })
         },
     }
 
