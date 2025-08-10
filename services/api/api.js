@@ -2,7 +2,7 @@ import axios from "axios";
 import {getDataFromStore, removeAllDataFromStore, saveDataToStore} from "../tokenService";
 import {endPoints} from "./endPoints";
 
-const BASE_URL = 'https://proxy-hr-ochre.vercel.app';
+export const BASE_URL = 'https://proxy-hr-ochre.vercel.app';
 export const api = axios.create({
     baseURL: BASE_URL, // add backend url here
     headers: {
@@ -13,7 +13,7 @@ export const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
 
-    const accessToken =         "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYXVuZ215YXRzb2UyazIxQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTQ3NTYzMzMsImV4cCI6MTc1NDc3NzkzM30.RnsbWy2oe3lorHY6lbaTXMp4Dngq85IM0zrLIprK0t1lbeybCZK3Lt5wrcLbgRfDuHRRPrOikEpVdkF6uzAWiw"
+    const accessToken =    "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYXVuZ215YXRzb2UyazIxQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTQ4MDg0MjUsImV4cCI6MTc1NDgzMDAyNX0.tLbxFhoLDEKcQ_SP1H5ETfPW4w8ejJnHbk4ziyI3UOQcsJwkpKAmwnDZtQYKhJRr9h_wQ-jrZvCPfAlFgA-XPg"
 
     // await getDataFromStore("accessToken")
     const refreshToken =""

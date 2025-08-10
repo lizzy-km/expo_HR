@@ -1,15 +1,10 @@
 import {Tabs} from 'expo-router';
 import React from 'react';
-import {Platform, View} from 'react-native';
-
+import {Platform} from 'react-native';
 import {HapticTab} from '@/components/HapticTab';
-import TabBarBackground from '@/components/ui/TabBarBackground';
 import {Colors} from '@/constants/Colors';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import {AttendanceIcon, HomeIcon, LeaveIcon, NewsIcon, PaySlipIcon} from "@/components/ui/svgs/ExportedSvg";
-
-
-
 
 
 export default function TabLayout() {

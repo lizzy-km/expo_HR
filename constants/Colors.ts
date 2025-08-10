@@ -3,8 +3,10 @@
  * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
  */
 
-const tintColorLight = '#0a7ea4';
+const tintColorLight = '#1F47BC';
 const tintColorDark = '#1F47BC';
+export const borderColorLight = tintColorLight;
+export const borderColorDark = tintColorDark;
 export const profileBackgroundColor = {
     backgroundColor: "linear-gradient(0deg, #414AA4 3.43%, #A7F3D0 96.55%), linear-gradient(0deg, #414AA4 3.43%, #A7F3D0 96.55%)"
 

@@ -1,15 +1,14 @@
-import {Platform, RefreshControl, ScrollView, StatusBar, StyleSheet, Text, View,} from 'react-native';
-import {Colors, profileBackgroundColor} from "@/constants/Colors";
+import {Platform, RefreshControl, ScrollView, StyleSheet, View,} from 'react-native';
+import {Colors} from "@/constants/Colors";
 import {useColorScheme} from "@/hooks/useColorScheme";
 import React from 'react';
 import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
 import {useGetUserQuery} from "@/services/query/getUserQuery";
-import {Image} from "expo-image";
-import {BlurView} from "expo-blur";
-import {LinearGradient} from "expo-linear-gradient";
-import UserProfile from "@/components/ui/UserProfile/UserProfile";
-import { UserDataType} from "@/constants/Types";
-
+import CheckInOut from "@/components/ui/CheckInOut/CheckInOut";
+import OnLeaveToday from "@/components/ui/OnLeaveToday/OnLeaveToday";
+import OnPresentToday from "@/components/ui/OnPresentToday/OnPresentToday";
+import QuickAccess from "@/components/ui/QuickAccess/QuickAccess";
+import ProfileBar from "@/components/ui/ProfileBar/ProfileBar";
 
 
 export default function HomeScreen() {
@@ -21,128 +20,49 @@ export default function HomeScreen() {
             flex: 1,
             backgroundColor: Colors[colorScheme ?? 'light'].background,
             alignItems: 'center',
-            justifyContent: 'center',
-            // paddingTop: StatusBar.currentHeight,
+            justifyContent: 'center', // paddingTop: StatusBar.currentHeight,
 
-        },
-        scrollView: {
-            backgroundColor: Colors[colorScheme ?? 'light'].background,
-            width: '100%',
+        }, scrollView: {
+            backgroundColor: Colors[colorScheme ?? 'light'].background, width: '100%',
 
-            paddingTop:Platform.select({
-                web:25
+            paddingTop: Platform.select({
+                web: 25
             })
-        },
-        text: {
-            color: Colors[colorScheme ?? 'light'].text,
-        },
-        navigationContainer: {
-            backgroundColor: Colors[colorScheme ?? 'light'].background,
-            paddingInline:20,
-            justifyContent: 'space-between',
-            display: 'flex',
-        },
-        paragraph: {
-            padding: 16,
-            fontSize: 15,
-            textAlign: 'center',
-        },
+        }
     });
 
 
-    const {data:userData,isLoading,refetch} =  useGetUserQuery();
+    const {isLoading, refetch} = useGetUserQuery();
 
 
-
-
-
-    return (
-        <SafeAreaProvider>
+    return (<SafeAreaProvider>
             <SafeAreaView style={styles.container} edges={["top"]}>
-                <View style={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: 50,
-                    zIndex:10,
-                    ...styles.navigationContainer
-                }}>
 
-                <View style={{
-                    height: 32,
-                    width: "auto",
-                    gap:8
-                }} >
-                  <UserProfile userData={userData} />
-                </View>
+                {/*Profile Bar*/}
+                <ProfileBar/>
 
-                    <View>
-
-                    </View>
-
-                </View>
                 <ScrollView style={styles.scrollView}
-                            refreshControl={
-                                <RefreshControl refreshing={isLoading} onRefresh={refetch} />
-                            }
+                            refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch}/>}
                 >
-
 
                     <View style={{
                         width: "100%",
                         height: "auto",
-                        backgroundColor: '#d5d5d5',
+                        backgroundColor: Colors[colorScheme ?? 'light'].background,
                         justifyContent: "flex-start",
                         alignItems: "center",
-                        padding: 10,
+                        padding: 20,
                         gap: 20
                     }}>
-                        <View style={{
-                            width: "80%",
-                            height: 200,
-                            backgroundColor: Colors[colorScheme ?? 'light'].background
-                        }}>
+                        <CheckInOut/>
 
-                            <Text style={styles.text}>Home screen</Text>
+                        {/*Present Today*/}
+                        <OnPresentToday/>
 
-                        </View>
-                        <View style={{
-                            width: "80%",
-                            height: 200,
-                            backgroundColor: Colors[colorScheme ?? 'light'].background
-                        }}>
-
-                            <Text style={styles.text}>Home screen</Text>
-
-                        </View>
-                        <View style={{
-                            width: "80%",
-                            height: 200,
-                            backgroundColor: Colors[colorScheme ?? 'light'].background
-                        }}>
-
-                            <Text style={styles.text}>Home screen</Text>
-
-                        </View>
-                        <View style={{
-                            width: "80%",
-                            height: 200,
-                            backgroundColor: Colors[colorScheme ?? 'light'].background
-                        }}>
-
-                            <Text style={styles.text}>Home screen</Text>
-
-                        </View>
-                        <View style={{
-                            width: "80%",
-                            height: 200,
-                            backgroundColor: Colors[colorScheme ?? 'light'].background
-                        }}>
-
-                            <Text style={styles.text}>Home screen</Text>
-
-                        </View>
+                        {/*On Leave Today*/}
+                        <OnLeaveToday/>
+                        {/*//Quick Access*/}
+                        <QuickAccess/>
 
                     </View>
 
@@ -154,10 +74,3 @@ export default function HomeScreen() {
 
     );
 }
-
-
-
-
-
-
-
