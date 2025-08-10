@@ -7,9 +7,11 @@ export const useGetUserQuery =  () => {
         {
             queryFn:getUserData,
             queryKey: ["user"],
+            refetchOnWindowFocus: false,
             initialData:<UserDataType>{
 
-            }
+            },
+            refetchOnMount:true
 
         }
     )
