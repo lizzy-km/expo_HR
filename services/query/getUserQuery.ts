@@ -4,15 +4,15 @@ import {UserDataType} from "@/constants/Types";
 import {useGetAccessTokenFromStore} from "@/services/query/getStoreQuery";
 
 export const useGetUserQuery =  () => {
-    const {data} :{data:string} = useGetAccessTokenFromStore()
+    // const {data} :{data:string} = useGetAccessTokenFromStore()
 
     return useQuery(
         {
-            queryFn:()=> GetUserData(data),
+            queryFn:()=> GetUserData(),
             queryKey: ["user"],
             refetchOnWindowFocus: false,
             initialData:<UserDataType>{
-                name:"empty"
+                id:0
             },
             refetchOnMount:true
 

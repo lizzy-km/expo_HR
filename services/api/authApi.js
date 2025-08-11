@@ -1,4 +1,4 @@
-import {api, BASE_URL} from "./api";
+import { BASE_URL} from "./api";
 import {endPoints} from "./endPoints";
 import axios from "axios";
 

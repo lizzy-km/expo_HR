@@ -45,7 +45,55 @@ export const deleteDataFromStore = async (TOKEN_KEY) => {
 export const removeAllDataFromStore = async (tokenKey:["accessToken","refreshToken"]) => {
     let i
     for (i in tokenKey) {
-        await SecureStore.deleteItemAsync(tokenKey[i]);
+        try{
+            await SecureStore.deleteItemAsync(tokenKey[i]);
+        }
+        catch(err){
+            throw new  Error({
+                message: 'Token Removed Error.',
+                err
+            });
+        }
+
     }
 
 }
+
+
+
+
+
+const ACCESS_TOKEN_KEY = 'accessToken';
+const REFRESH_TOKEN_KEY = 'refreshToken';
+const DEVICE_ID_KEY = 'deviceId';
+
+// Save all login data at once
+export const saveLoginData = async ({ accessToken, refreshToken, deviceId }) => {
+    try {
+        await Promise.all([
+            SecureStore.setItemAsync(ACCESS_TOKEN_KEY, accessToken),
+            SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refreshToken),
+            SecureStore.setItemAsync(DEVICE_ID_KEY, deviceId)
+        ]);
+    } catch (error) {
+        console.error("Failed to save login data", error);
+    }
+};
+
+// Clear all login data at once
+export const deleteLoginData = async () => {
+    try {
+        await Promise.all([
+            SecureStore.deleteItemAsync(ACCESS_TOKEN_KEY),
+            SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY),
+            SecureStore.deleteItemAsync(DEVICE_ID_KEY)
+        ]);
+    } catch (error) {
+        console.error("Failed to delete login data", error);
+    }
+};
+
+// Get individual items (needed for interceptors)
+export const getAccessToken = () => SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
+export const getRefreshToken = () => SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+export const getDeviceId = () => SecureStore.getItemAsync(DEVICE_ID_KEY);

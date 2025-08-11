@@ -38,7 +38,6 @@ export default function HomeScreen() {
         refetch()
     },[])
 
-    console.log(data,"Profile Data",failureReason)
 
 
     return (<SafeAreaProvider>

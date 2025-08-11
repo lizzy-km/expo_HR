@@ -14,3 +14,27 @@ export const useGetAccessTokenFromStore =  () => {
         }
     )
 }
+
+export const useGetRefreshTokenFromStore =  () => {
+    return useQuery(
+        {
+            queryFn:()=>getDataFromStore("refreshToken"),
+            queryKey: ["refreshToken"],
+            refetchOnWindowFocus: false,
+            refetchOnMount:true
+
+        }
+    )
+}
+
+export const useGetDeviceIdFromStore =  () => {
+    return useQuery(
+        {
+            queryFn:()=>getDataFromStore("deviceId"),
+            queryKey: ["deviceId"],
+            refetchOnWindowFocus: false,
+            refetchOnMount:true
+
+        }
+    )
+}

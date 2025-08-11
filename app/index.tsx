@@ -17,7 +17,7 @@ import {Link} from "expo-router";
 import Animated, {useAnimatedStyle, withSpring} from "react-native-reanimated";
 import {AuthMutation} from "@/services/mutation/auth/AuthMutation";
 import {StoreMutation} from "@/services/mutation/StoreMutation";
-import {saveDataToStore} from "@/services/tokenService";
+import {saveLoginData} from "@/services/tokenService";
 
 export default function Index() {
     const colorScheme = useColorScheme();
@@ -43,16 +43,7 @@ export default function Index() {
     })
 
     const {mutate, data, isSuccess} = AuthMutation()
-    const {accessToken, deviceId, refreshToken} = data || {accessToken:null, deviceId:null, refreshToken:null}
-
-    const keyData = {
-        value: accessToken||"",
-        key: "accessToken"
-    }
-
-    const {mutate: saveAccessToken, data: accessTokenData, failureReason} = StoreMutation(accessToken,"accessToken")
-
-
+    const {accessToken, deviceId, refreshToken} = data || {accessToken: null, deviceId: null, refreshToken: null}
 
 
     function LoginSubmit() {
@@ -62,10 +53,9 @@ export default function Index() {
     }
 
     useEffect(() => {
-        data && saveAccessToken()
-        // saveDataToStore(accessToken,"accessToken")
-    }, [data])
+        data && saveLoginData({accessToken, deviceId, refreshToken})
 
+    }, [data])
 
 
     return (<TouchableNativeFeedback style={LoginStyle.container} onPressIn={() => setOnKeyBoard(false)}

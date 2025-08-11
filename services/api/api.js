@@ -1,9 +1,16 @@
 import axios from "axios";
-import {getDataFromStore, removeAllDataFromStore, saveDataToStore} from "../tokenService";
 import {endPoints} from "./endPoints";
-import {useGetAccessTokenFromStore} from "@/services/query/getStoreQuery";
+import {
+    useGetAccessTokenFromStore,
+    useGetDeviceIdFromStore,
+    useGetRefreshTokenFromStore
+} from "@/services/query/getStoreQuery";
+import {DeleteStoreMutation, StoreMutation} from "@/services/mutation/StoreMutation";
+import {deleteLoginData, getAccessToken, getDeviceId, getRefreshToken, saveLoginData} from "@/services/tokenService";
 
 export const BASE_URL = 'https://proxy-hr-ochre.vercel.app';
+
+
 export const api = axios.create({
     baseURL: BASE_URL, // add backend url here
     headers: {
@@ -11,37 +18,9 @@ export const api = axios.create({
     },
 });
 
-function AccessToken() {
-    const {data} = useGetAccessTokenFromStore()
-
-    return data
-}
-
-api.interceptors.request.use(async (config) => {
-
-    // let accessToken =AccessToken() ||''
-    // let deviceId = ''
-    //
-    // console.log(accessToken,"FromApi");
-    //
-    //
-    // const refreshToken =""
-    //     // await getDataFromStore("refreshToken");
-    //
-    // if (accessToken) {
-    //     config.headers.Authorization = `Bearer ${accessToken}`;
-    // }
-    // config.headers["Device-UUID"] = `${deviceId}`;
-
-    return config;
-
-}, error => {
-    return Promise.reject(error);
-})
-
 let isRefreshing = false; // Flag to indicate if a refresh token request is in progress
 let failedQueue = []; // Array to store pending requests
-// Helper function to process the queue
+
 const processQueue = (error, token = null) => {
     failedQueue.forEach((prom) => {
         if (error) {
@@ -55,74 +34,127 @@ const processQueue = (error, token = null) => {
     });
     failedQueue = [];
 };
-api.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-        const originalRequest = error.config;
-        // Check for 408 status and if the request hasn't been retried yet
-        if (error?.response?.status === 408 && !originalRequest?._retry) {
-            // If a refresh is already in progress, queue this request
-            if (isRefreshing) {
-                return new Promise(function(resolve, reject) {
-                    // Store the original request config along with the promise resolvers
-                    failedQueue.push({resolve, reject, config: originalRequest});
-                }).catch((err) => {
-                    return Promise.reject(err); // Propagate rejection
-                });
+
+api.interceptors.request.use(async (config) => {
+
+    const accessToken = await getAccessToken();
+    const deviceId = await getDeviceId();
+
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    config.headers["Device-UUID"] = `${deviceId}`;
+
+    return config;
+
+}, error => {
+    return Promise.reject(error);
+})
+
+api.interceptors.response.use((response) => response, async (error) => {
+    const originalRequest = error.config;
+    // Check for 408 status and if the request hasn't been retried yet
+    if (error?.response?.status === 408 && !originalRequest?._retry) {
+        // If a refresh is already in progress, queue this request
+        if (isRefreshing) {
+            return new Promise(function(resolve, reject) {
+                // Store the original request config along with the promise resolvers
+                failedQueue.push({resolve, reject, config: originalRequest});
+            }).catch((err) => {
+                return Promise.reject(err); // Propagate rejection
+            });
+        }
+
+        originalRequest._retry = true;
+        isRefreshing = true;
+        const refreshToken = await getRefreshToken();
+
+        try {
+            if (!refreshToken) {
+                // Handle case where refresh token is also expired or missing
+                await deleteLoginData();
+                return Promise.reject(error);
             }
 
-            originalRequest._retry = true;
-            isRefreshing = true;
+            const refreshResponse = await api
+                .post(endPoints.auth.refresh, {refreshToken})
+                .catch(async (refreshError) => {
+                    await deleteLoginData();
+                    failedQueue.forEach((promise) => promise.reject(refreshError));
+                    failedQueue = []; // Clear the queue
+                }); // Send refresh token
 
-            try {
-                const refreshToken = await getDataFromStore("refreshToken") || false;
-                if (!refreshToken) {
-                    // Handle case where refresh token is also expired or missing
-                    await removeAllDataFromStore();
-                    return Promise.reject(error);
-                }
+            const data = refreshResponse?.data ? refreshResponse.data : refreshResponse;
 
-                const refreshResponse = await api
-                    .post(endPoints.auth.refresh, {refreshToken})
-                    .catch(async (refreshError) => {
-                        await removeAllDataFromStore();
-                        failedQueue.forEach((promise) => promise.reject(refreshError));
-                        failedQueue = []; // Clear the queue
-                    }); // Send refresh token
+            const accessToken = data?.accessToken
+            const refreshToken = data?.refreshToken
+            const deviceId = data?.deviceId
 
-                const data = refreshResponse?.data
-                    ? refreshResponse.data
-                    : refreshResponse;
-                await saveDataToStore("refreshToken", data?.refreshToken);
-                await saveDataToStore("accessToken", data?.accessToken);
-                await saveDataToStore("deviceId", data?.deviceId);
-                await saveDataToStore("expiredAt", data?.expiresAt);
+            await saveLoginData({ accessToken, refreshToken, deviceId });
 
-                const newAccessToken = await getDataFromStore("accessToken");
-                // Update the header of the original request
-                api.defaults.headers.common["Authorization"] =
-                    "Bearer " + newAccessToken;
-                originalRequest.headers["Authorization"] = "Bearer " + newAccessToken;
+            const newAccessToken = accessToken
+            // Update the header of the original request
+            api.defaults.headers.common["Authorization"] = "Bearer " + newAccessToken;
+            originalRequest.headers["Authorization"] = "Bearer " + newAccessToken;
 
-                processQueue(null, newAccessToken);
+            processQueue(null, newAccessToken);
 
-                return api(originalRequest); // Retry the original request
-            } catch (refreshError) {
-                // Handle refresh token failure (e.g., redirect to login)
-                processQueue(refreshError, null);
-                await removeAllDataFromStore();
-                return Promise.reject(refreshError);
-            } finally {
-                isRefreshing = false; // Reset the refreshing flag
-            }
+            return api(originalRequest); // Retry the original request
+        } catch (refreshError) {
+            // Handle refresh token failure (e.g., redirect to login)
+            processQueue(refreshError, null);
+            await deleteLoginData();
+            return Promise.reject(refreshError);
+        } finally {
+            isRefreshing = false; // Reset the refreshing flag
         }
-        if (error?.response?.status === 401) {
-            await removeAllDataFromStore();
-        }
-        if (error?.code === "ECONNABORTED" || error?.status === 500 || error?.response?.status === 500) {
-            // window.location.replace('/500')
-        }
+    }
+    if (error?.response?.status === 401) {
+        await deleteLoginData();
+    }
+    if (error?.code === "ECONNABORTED" || error?.status === 500 || error?.response?.status === 500) {
+        // window.location.replace('/500')
+    }
 
-        return Promise.reject(error);
-    },
-);
+    return Promise.reject(error);
+},);
+
+
+export const API = () => {
+
+
+
+    const {data: accessToken} = useGetAccessTokenFromStore()
+    const {data: refreshToken} = useGetRefreshTokenFromStore()
+    const {data: deviceId} = useGetDeviceIdFromStore()
+
+    const {mutate: DeleteStoreData} = DeleteStoreMutation()
+
+    function SaveLoginData (accessToken, refreshToken, deviceId) {
+        const {
+            mutate: saveAccessToken, data: accessTokenData, failureReason
+        } = StoreMutation(accessToken, "accessToken")
+        const {mutate: saveRefreshToken, data: refreshTokenData} = StoreMutation(refreshToken, "accessToken")
+        const {mutate: saveDeviceId, data: deviceIdData} = StoreMutation(deviceId, "deviceId")
+        saveAccessToken()
+        saveRefreshToken()
+        saveDeviceId()
+    }
+
+
+
+
+    // Helper function to process the queue
+
+
+    return null;
+
+}
+
+
+
+
+
+
+
+
