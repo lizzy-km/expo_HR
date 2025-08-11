@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.quixio.expo_HR"
     },
     "web": {
       "bundler": "metro",
@@ -34,10 +35,21 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-secure-store"
+     [ "expo-secure-store",
+      {
+        "configureAndroidBackup": true,
+        "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+      }]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b8ec97c8-60e2-49a6-8df0-97f481d7014c"
+      }
+    },
+    "owner": "quixio"
   }
 }

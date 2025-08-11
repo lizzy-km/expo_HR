@@ -59,12 +59,16 @@ export default function ProfileBar() {
                     justifyContent: "center"
                 }}>
                     <Text style={{
-                        fontSize: 16
+                        fontSize: 16,
+                        color:Colors[colorScheme ?? "light"].text
+
                     }}>
                         {greeting},
                     </Text>
                     <Text style={{
-                        fontSize: 16
+                        fontSize: 16,
+                        color:Colors[colorScheme ?? "light"].text
+
                     }}>
                         {userData.name}
                     </Text>

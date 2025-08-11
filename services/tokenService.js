@@ -1,21 +1,36 @@
 // services/tokenService.js
 import * as SecureStore from 'expo-secure-store';
+import {useMutation} from "@tanstack/react-query";
 
 
-export const saveDataToStore = async (TOKEN_KEY,token) => {
+export async function saveDataToStore (token,TOKEN_KEY)  {
+
+    // await SecureStore.setItemAsync(TOKEN_KEY,token)
+    // console.log(token,TOKEN_KEY,"Mutation Key AN Value");
+
     try {
-        await SecureStore.setItemAsync(TOKEN_KEY, token);
+         await SecureStore.setItemAsync(TOKEN_KEY,token).catch((err)=>{console.log(err)
+        throw new  Error(err)});
     } catch (error) {
-        console.error(TOKEN_KEY, error);
+
+         throw new  Error(error);
     }
-};
+}
 
 export const getDataFromStore = async (TOKEN_KEY) => {
     try {
-        return await SecureStore.getItemAsync(TOKEN_KEY);
+        // Use the correct function: getItemAsync
+        const token = await SecureStore.getItemAsync(TOKEN_KEY); // CORRECT
+
+        if (token) {
+            return token;
+        }
+        return token;
     } catch (error) {
-        console.error(TOKEN_KEY, error);
-        return null;
+        throw new  Error({
+            message: 'No token found.',
+            error
+        });
     }
 };
 

@@ -12,7 +12,9 @@ export default function QuickAccess() {
     const styles:style = {
         headerText: {
             fontSize: 20,
-            fontWeight: 500
+            fontWeight: 500,
+            color:Colors[colorScheme ?? "light"].text
+
         },
         text: {
             color: Colors[colorScheme ?? 'light'].text,
@@ -43,7 +45,8 @@ export default function QuickAccess() {
                     width: "100%",
                     height: "auto",
                     gap: 16,
-                    flexDirection: "row"
+                    flexDirection: "row",
+
                 }
             }>
                 {/*Content*/}

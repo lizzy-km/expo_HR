@@ -1,6 +1,7 @@
 import axios from "axios";
 import {getDataFromStore, removeAllDataFromStore, saveDataToStore} from "../tokenService";
 import {endPoints} from "./endPoints";
+import {useGetAccessTokenFromStore} from "@/services/query/getStoreQuery";
 
 export const BASE_URL = 'https://proxy-hr-ochre.vercel.app';
 export const api = axios.create({
@@ -10,20 +11,27 @@ export const api = axios.create({
     },
 });
 
+function AccessToken() {
+    const {data} = useGetAccessTokenFromStore()
+
+    return data
+}
 
 api.interceptors.request.use(async (config) => {
 
-    const accessToken =    "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYXVuZ215YXRzb2UyazIxQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTQ4MDg0MjUsImV4cCI6MTc1NDgzMDAyNX0.tLbxFhoLDEKcQ_SP1H5ETfPW4w8ejJnHbk4ziyI3UOQcsJwkpKAmwnDZtQYKhJRr9h_wQ-jrZvCPfAlFgA-XPg"
-
-    // await getDataFromStore("accessToken")
-    const refreshToken =""
-        // await getDataFromStore("refreshToken");
-    const deviceId ="2980465b-08ff-46b2-9785-2b1de3ebf252"
-        // await getDataFromStore("deviceId")
-    if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    config.headers["Device-UUID"] = `${deviceId}`;
+    // let accessToken =AccessToken() ||''
+    // let deviceId = ''
+    //
+    // console.log(accessToken,"FromApi");
+    //
+    //
+    // const refreshToken =""
+    //     // await getDataFromStore("refreshToken");
+    //
+    // if (accessToken) {
+    //     config.headers.Authorization = `Bearer ${accessToken}`;
+    // }
+    // config.headers["Device-UUID"] = `${deviceId}`;
 
     return config;
 

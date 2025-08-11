@@ -1,7 +1,7 @@
 import {Platform, RefreshControl, ScrollView, StyleSheet, View,} from 'react-native';
 import {Colors} from "@/constants/Colors";
 import {useColorScheme} from "@/hooks/useColorScheme";
-import React from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
 import {useGetUserQuery} from "@/services/query/getUserQuery";
 import CheckInOut from "@/components/ui/CheckInOut/CheckInOut";
@@ -32,7 +32,13 @@ export default function HomeScreen() {
     });
 
 
-    const {isLoading, refetch} = useGetUserQuery();
+    const {isLoading, refetch,data,failureReason} = useGetUserQuery();
+
+    useEffect(() => {
+        refetch()
+    },[])
+
+    console.log(data,"Profile Data",failureReason)
 
 
     return (<SafeAreaProvider>

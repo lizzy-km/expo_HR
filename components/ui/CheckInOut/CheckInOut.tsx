@@ -35,15 +35,19 @@ export default function CheckInOut() {
             >
                 <Text style={{
                     fontSize: 28,
-                    fontWeight: 500
+                    fontWeight: 500,
+                    color:Colors[colorScheme ?? "light"].text
+
 
                 }}>
-                    {moment().format("hh")}:{moment().get("minutes")} {moment().format("A")}
+                    {moment().format("hh")}:{moment().format("mm")} {moment().format("A")}
                 </Text>
                 <Text style={{
                     fontSize: 14,
                     fontWeight: 400,
-                    lineHeight: 22.4
+                    lineHeight: 22.4,
+                    color:Colors[colorScheme ?? "light"].text
+
 
                 }}>
                     {moment().format("MMM")} {moment().format("DD")}, {moment().format("YYYY")}
@@ -68,7 +72,8 @@ export default function CheckInOut() {
                 <Text style={{
                     textAlign: "center",
                     fontSize: 12,
-                    fontWeight: 400
+                    fontWeight: 400,
+                    color:Colors[colorScheme ?? "light"].text
                 }}>
                     Total Working Hours
                 </Text>

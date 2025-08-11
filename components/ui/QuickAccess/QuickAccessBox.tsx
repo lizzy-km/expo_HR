@@ -1,7 +1,11 @@
 import {Text, View} from "react-native";
 import React from "react";
+import {Colors} from "@/constants/Colors";
+import {useColorScheme} from "@/hooks/useColorScheme";
 
 export default function QuickAccessBox({title,bgImage}:{title:string,bgImage:string}     ) {
+    const colorScheme = useColorScheme();
+
     return(
         <View style={
             {
@@ -27,7 +31,9 @@ export default function QuickAccessBox({title,bgImage}:{title:string,bgImage:str
             <Text style={{
                 fontSize: 12,
                 textAlign: "center",
-                fontWeight: 500
+                fontWeight: 500,
+                color:Colors[colorScheme ?? "light"].text
+
             }}>
                 {title}
             </Text>

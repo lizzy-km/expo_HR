@@ -31,18 +31,28 @@ export default function userProfile({userData,size}: { userData: UserDataType ,s
                 width: size-2,
                 height: size-2,
                 borderRadius,
-                backgroundColor: '#FFFFFF',
+                backgroundColor: "#FFFFFF",
                 justifyContent:"center",
                 alignItems:"center"
 
 
             }}>
+                <LinearGradient style={{
+                    position: 'absolute',
+                    top: 1,
+                    left: 1,
+                    height: size-4,
+                    width: size-4,
+                    borderRadius:borderRadius-1,
+
+
+                }} colors={['#A7F3D0', '#414AA4']}/>
                 <Image
                     style={{
                         width: size-4,
                         height: size-4,
                         borderRadius:borderRadius-1,
-                        backgroundColor: '#FFFFFF',
+                        backgroundColor: '#FFFFFF20',
 
                     }}
                     contentFit={'cover'}

@@ -13,7 +13,9 @@ export default function OnLeaveToday() {
 
     const styles: style = {
         headerText: {
-            fontSize: 20, fontWeight: 500
+            fontSize: 20, fontWeight: 500,
+            color:Colors[colorScheme ?? "light"].text
+
         }, text: {
             color: Colors[colorScheme ?? 'light'].text, fontSize: 16, lineHeight: 25.6, fontWeight: 400
         },
