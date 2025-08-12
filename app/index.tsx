@@ -1,5 +1,5 @@
 import {
-    Keyboard,
+    Keyboard, Platform,
     Pressable,
     StyleSheet,
     Text,
@@ -18,6 +18,9 @@ import Animated, {useAnimatedStyle, withSpring} from "react-native-reanimated";
 import {AuthMutation} from "@/services/mutation/auth/AuthMutation";
 import {StoreMutation} from "@/services/mutation/StoreMutation";
 import {saveLoginData} from "@/services/tokenService";
+import {BlurView} from "expo-blur";
+import {DotLottie} from "@lottiefiles/dotlottie-react-native";
+import {DotLottieReact} from "@lottiefiles/dotlottie-react";
 
 export default function Index() {
     const colorScheme = useColorScheme();
@@ -66,9 +69,36 @@ export default function Index() {
                 paddingInline: 20,
                 transitionDuration: 0.4,
                 transitionProperty: "all",
-                transitionDelay: 0.5
+                transitionDelay: 0.5,
+                position:"relative"
 
             }}>
+                <BlurView
+                    style={{
+                        position:"absolute",
+                        left:0,
+                        top:0,
+                        width:"100%",
+                        height:"100%",
+                        zIndex:10,
+                        backgroundColor:borderColorDark+70
+                    }}
+                >
+                    <DotLottieReact
+                        style={{
+                            scale:"50%",
+
+                        }}
+                        src='https://lottie.host/a9af128e-03fd-4056-9561-6a075dc02d66/RhIAMTfpfo.lottie'
+                        loop
+                        autoplay
+                    />
+
+
+
+
+
+                </BlurView>
                 <LoginHero/>
 
                 {/*    Header*/}
