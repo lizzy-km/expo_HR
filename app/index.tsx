@@ -12,15 +12,12 @@ import {EyeClose, EyeOpen, LoginHero} from "@/components/ui/svgs/ExportedSvg";
 import {borderColorDark, Colors} from "@/constants/Colors";
 import {useColorScheme} from "@/hooks/useColorScheme";
 import {LoginStyle} from "@/constants/Styles";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "expo-router";
 import Animated, {useAnimatedStyle, withSpring} from "react-native-reanimated";
 import {AuthMutation} from "@/services/mutation/auth/AuthMutation";
-import {StoreMutation} from "@/services/mutation/StoreMutation";
 import {saveLoginData} from "@/services/tokenService";
 import {BlurView} from "expo-blur";
-import {DotLottie} from "@lottiefiles/dotlottie-react-native";
-import {DotLottieReact} from "@lottiefiles/dotlottie-react";
 
 export default function Index() {
     const colorScheme = useColorScheme();
@@ -45,7 +42,7 @@ export default function Index() {
         }
     })
 
-    const {mutate, data, isSuccess} = AuthMutation()
+    const {mutate, data, isSuccess,isPending} = AuthMutation()
     const {accessToken, deviceId, refreshToken} = data || {accessToken: null, deviceId: null, refreshToken: null}
 
 
@@ -73,32 +70,30 @@ export default function Index() {
                 position:"relative"
 
             }}>
-                <BlurView
-                    style={{
-                        position:"absolute",
-                        left:0,
-                        top:0,
-                        width:"100%",
-                        height:"100%",
-                        zIndex:10,
-                        backgroundColor:borderColorDark+70
-                    }}
-                >
-                    <DotLottieReact
+                {
+                    isPending && <BlurView
                         style={{
-                            scale:"50%",
-
+                            position:"absolute",
+                            left:0,
+                            top:0,
+                            width:"100%",
+                            height:"100%",
+                            zIndex:10,
+                            // backgroundColor:borderColorDark+70,
+                            justifyContent:"center",
+                            alignItems:"center"
                         }}
-                        src='https://lottie.host/a9af128e-03fd-4056-9561-6a075dc02d66/RhIAMTfpfo.lottie'
-                        loop
-                        autoplay
-                    />
+                    >
+                        <Text>
+                            Loading...
+                        </Text>
 
 
 
 
+                    </BlurView>
+                }
 
-                </BlurView>
                 <LoginHero/>
 
                 {/*    Header*/}
