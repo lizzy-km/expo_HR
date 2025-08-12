@@ -1,4 +1,4 @@
-import { BASE_URL} from "./api";
+import {api, BASE_URL} from "./api";
 import {endPoints} from "./endPoints";
 import axios from "axios";
 
@@ -8,4 +8,8 @@ export const authApi = axios.create({
 
 export const loginApi=async(data)=>{
     return await authApi.post(endPoints.auth.login,data).then(({data})=>Promise.resolve(data)).catch(e=>Promise.reject(e));
+}
+
+export const logoutApi=async()=>{
+    return await api.post(endPoints.auth.logout).then(({data})=>Promise.resolve(data)).catch(e=>Promise.reject(e));
 }

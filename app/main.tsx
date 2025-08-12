@@ -1,48 +1,52 @@
-import {Stack} from "expo-router";
+import {Stack, useFocusEffect, useRouter} from "expo-router";
 import React, {useEffect} from "react";
 import {useGetAccessTokenFromStore} from "@/services/query/getStoreQuery";
 import {useAuthStore} from "@/store/useAuthStore";
-import {View, Text, Platform, ViewStyle} from "react-native";
+import {Text, View} from "react-native";
 import {borderColorDark} from "@/constants/Colors";
 
 export function Main() {
-    const {data,isError,refetch,isLoading} = useGetAccessTokenFromStore()
+    const {data, isError, refetch, isLoading} = useGetAccessTokenFromStore()
     const {isLogin} = useAuthStore()
 
-    useEffect(()=>{
-        refetch().then(r => console.log(data,"MainTokenUse",isError) )
-    },[refetch,isLogin])
+    useEffect(() => {
+        refetch().then(r => console.log(data, "MainTokenUse", isError))
+    }, [refetch, isLogin])
 
-    if(isLoading){
+    if (isLoading) {
         return <View
             style={{
                 flex: 1,
-                width:"100%",
-                height:"100%",
-                justifyContent:"center",
-                alignItems:"center",
-                backgroundColor:borderColorDark
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: borderColorDark
             }}
         >
 
-           <Text>
-               Loading...
-           </Text>
+            <Text>
+                Loading...
+            </Text>
 
         </View>
     }
 
+
+
     return (<Stack>
-            <Stack.Protected guard={!data}>
-                <Stack.Screen name={"index"} options={{headerShown: false}}/>
-                <Stack.Screen name={"forgot-pass"} options={{headerShown: false}}/>
+        <Stack.Protected guard={!data}>
+            <Stack.Screen name={"index"} options={{headerShown: false}}/>
+            <Stack.Screen name={"login"} options={{headerShown: false}}/>
 
-            </Stack.Protected>
+            <Stack.Screen name={"forgot-pass"} options={{headerShown: false}}/>
 
-            <Stack.Protected guard={!!data}>
-                <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
-                <Stack.Screen name="+not-found"/>
-            </Stack.Protected>
+        </Stack.Protected>
 
-        </Stack>)
+        <Stack.Protected guard={!!data}>
+            <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
+            <Stack.Screen name="+not-found"/>
+        </Stack.Protected>
+
+    </Stack>)
 }

@@ -6,6 +6,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import React from "react";
 import {Main} from "@/app/main";
+import {usePathname, useRouter} from "expo-router";
 
 
 export default function RootLayout() {
@@ -29,6 +30,11 @@ export default function RootLayout() {
         // Async font loading only occurs in development.
         return null;
     }
+
+    // const pathname = usePathname();
+    //
+    // console.log(pathname);
+
 
 
     return (<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

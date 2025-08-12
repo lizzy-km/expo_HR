@@ -1,15 +1,31 @@
-import {Tabs} from 'expo-router';
-import React from 'react';
+import {Tabs, useFocusEffect, useRouter} from 'expo-router';
+import React, {useEffect} from 'react';
 import {Platform} from 'react-native';
 import {HapticTab} from '@/components/HapticTab';
 import {Colors} from '@/constants/Colors';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import {AttendanceIcon, HomeIcon, LeaveIcon, NewsIcon, PaySlipIcon} from "@/components/ui/svgs/ExportedSvg";
+import {useGetAccessTokenFromStore} from "@/services/query/getStoreQuery";
+import {useAuthStore} from "@/store/useAuthStore";
 
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
+    const {isLogin} = useAuthStore()
 
+
+    const {data,refetch} = useGetAccessTokenFromStore()
+
+    const router = useRouter();
+    useFocusEffect(() => {
+        if (!data) {
+            router.replace('/login')
+        }
+    })
+
+    useEffect(() => {
+        refetch()
+    },[isLogin])
     return (
         <Tabs
 

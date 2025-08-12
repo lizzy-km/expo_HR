@@ -1,16 +1,27 @@
 import {LinearGradient} from "expo-linear-gradient";
-import {View} from "react-native";
+import {Pressable, View} from "react-native";
 import {Image} from "expo-image";
 import {UserDataType} from "@/constants/Types";
 import {BASE_URL} from "@/services/api/api";
+import {Logout} from "@/services/mutation/auth/AuthMutation";
 
 export default function userProfile({userData,size}: { userData: UserDataType ,size:number }) {
     const borderRadius = size/2
 
     const userPfUrl = userData?.pfUrl?.replace("https://d3tl7h6gfpqk4t.cloudfront.net",BASE_URL)
 
+    const {mutate,isSuccess} = Logout()
+
+
+    function onLogOut (){
+        mutate()
+    }
+
     return (
-        <View style={{
+        <Pressable
+            onPress={onLogOut}
+
+            style={{
             width: size,
             height: size,
             borderRadius,
@@ -62,6 +73,6 @@ export default function userProfile({userData,size}: { userData: UserDataType ,s
                 />
             </View>
 
-        </View>
+        </Pressable>
     )
 }
