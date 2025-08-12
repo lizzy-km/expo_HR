@@ -1,14 +1,18 @@
 import {Text, View} from "react-native";
 import {borderColorDark, Colors} from "@/constants/Colors";
-import React from "react";
-import moment from "moment";
+import React, {useState} from "react";
 import {useColorScheme} from "@/hooks/useColorScheme";
+import moment from "moment/moment";
 
 export default function CheckInOut() {
     const colorScheme = useColorScheme();
 
-    return (
-        <View style={{
+    const [time, setTime] = useState<string>(`${moment().format("hh")}:${moment().format("mm")} ${moment().format("A")}`);
+
+
+    setInterval(() => setTime(`${moment().format("hh")}:${moment().format("mm")} ${moment().format("A")}`), 10000);
+
+    return (<View style={{
             width: "100%",
             minHeight: 321,
             backgroundColor: Colors[colorScheme ?? 'light'].background,
@@ -28,25 +32,19 @@ export default function CheckInOut() {
             {/*Time*/}
             <View
                 style={{
-                    gap: 4,
-                    justifyContent: "flex-start",
-                    alignItems: "center"
+                    gap: 4, justifyContent: "flex-start", alignItems: "center"
                 }}
             >
                 <Text style={{
-                    fontSize: 28,
-                    fontWeight: 500,
-                    color:Colors[colorScheme ?? "light"].text
+                    fontSize: 28, fontWeight: 500, color: Colors[colorScheme ?? "light"].text
 
 
                 }}>
-                    {moment().format("hh")}:{moment().format("mm")} {moment().format("A")}
+                    {time}
+
                 </Text>
                 <Text style={{
-                    fontSize: 14,
-                    fontWeight: 400,
-                    lineHeight: 22.4,
-                    color:Colors[colorScheme ?? "light"].text
+                    fontSize: 14, fontWeight: 400, lineHeight: 22.4, color: Colors[colorScheme ?? "light"].text
 
 
                 }}>
@@ -70,19 +68,13 @@ export default function CheckInOut() {
             }}>
 
                 <Text style={{
-                    textAlign: "center",
-                    fontSize: 12,
-                    fontWeight: 400,
-                    color:Colors[colorScheme ?? "light"].text
+                    textAlign: "center", fontSize: 12, fontWeight: 400, color: Colors[colorScheme ?? "light"].text
                 }}>
                     Total Working Hours
                 </Text>
 
                 <Text style={{
-                    textAlign: "center",
-                    fontSize: 20,
-                    fontWeight: 500,
-                    color: borderColorDark
+                    textAlign: "center", fontSize: 20, fontWeight: 500, color: borderColorDark
                 }}>
                     0 hours
                 </Text>
@@ -92,15 +84,12 @@ export default function CheckInOut() {
             {/*    Check-In_Out_Button*/}
 
             <View style={{
-                height: 48,
-                gap: 24,
-                flexDirection: "row"
+                height: 48, gap: 24, flexDirection: "row"
             }}>
                 <View>
 
                 </View>
             </View>
 
-        </View>
-    )
+        </View>)
 }

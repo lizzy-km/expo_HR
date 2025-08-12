@@ -7,7 +7,7 @@ import {useColorScheme} from "@/hooks/useColorScheme";
 import UserProfile from "../UserProfile/UserProfile";
 
 
-export default function ProfileBar() {
+export default function ProfileBar({setModalVisible}) {
     const colorScheme = useColorScheme();
 
     const {data: userData, isLoading, refetch} = useGetUserQuery();
@@ -52,7 +52,7 @@ export default function ProfileBar() {
                 display: "flex",
                 flexDirection: "row"
             }}>
-                <UserProfile userData={userData} size={42}/>
+                <UserProfile setModalVisible={setModalVisible} userData={userData} size={42}/>
                 <View style={{
                     height: 42,
                     flexDirection: "column",

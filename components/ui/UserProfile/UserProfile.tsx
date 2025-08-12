@@ -4,8 +4,9 @@ import {Image} from "expo-image";
 import {UserDataType} from "@/constants/Types";
 import {BASE_URL} from "@/services/api/api";
 import {Logout} from "@/services/mutation/auth/AuthMutation";
+import {LogoutConfirmationModal} from "expo-dev-launcher/bundle/components/LogoutConfirmationModal";
 
-export default function userProfile({userData,size}: { userData: UserDataType ,size:number }) {
+export default function userProfile({userData,size,setModalVisible}: { userData: UserDataType ,size:number }) {
     const borderRadius = size/2
 
     const userPfUrl = userData?.pfUrl?.replace("https://d3tl7h6gfpqk4t.cloudfront.net",BASE_URL)
@@ -14,7 +15,11 @@ export default function userProfile({userData,size}: { userData: UserDataType ,s
 
 
     function onLogOut (){
-        mutate()
+        setModalVisible(true)
+        // LogoutConfirmationModal({
+        //     onClosePress,
+        //     onLogoutPress:mutate
+        // })
     }
 
     return (

@@ -19,6 +19,7 @@ import {AuthMutation} from "@/services/mutation/auth/AuthMutation";
 import {saveLoginData} from "@/services/tokenService";
 import {BlurView} from "expo-blur";
 import {useGetAccessTokenFromStore} from "@/services/query/getStoreQuery";
+import BlurTabBarBackground from "@/components/ui/TabBarBackground.ios";
 
 export default function Login() {
 
@@ -82,19 +83,24 @@ export default function Login() {
             }}>
                 {
                     isPending && <BlurView
+                    tint={'dark'}
                         style={{
                             position:"absolute",
-                            left:0,
+                            right:-10,
                             top:0,
-                            width:"100%",
+                            width:"120%",
                             height:"100%",
                             zIndex:10,
-                            // backgroundColor:borderColorDark+70,
+                            backgroundColor:borderColorDark+30,
                             justifyContent:"center",
-                            alignItems:"center"
+                            alignItems:"center",
                         }}
                     >
-                        <Text>
+                        <Text style={{
+                            color:"#fff",
+                            fontSize:20,
+                            fontFamily:"PoppinsMedium"
+                        }} >
                             Loading...
                         </Text>
 
