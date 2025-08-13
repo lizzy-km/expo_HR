@@ -7,6 +7,7 @@ import {
 } from "@/services/query/getStoreQuery";
 import {DeleteStoreMutation, StoreMutation} from "@/services/mutation/StoreMutation";
 import {deleteLoginData, getAccessToken, getDeviceId, getRefreshToken, saveLoginData} from "@/services/tokenService";
+import {router} from "expo-router";
 
 export const BASE_URL = 'https://proxy-hr-ochre.vercel.app';
 
@@ -73,6 +74,7 @@ api.interceptors.response.use((response) => response, async (error) => {
             if (!refreshToken) {
                 // Handle case where refresh token is also expired or missing
                 await deleteLoginData();
+                router.replace("/login");
                 return Promise.reject(error);
             }
 
@@ -80,6 +82,8 @@ api.interceptors.response.use((response) => response, async (error) => {
                 .post(endPoints.auth.refresh, {refreshToken})
                 .catch(async (refreshError) => {
                     await deleteLoginData();
+                    router.replace("/login");
+
                     failedQueue.forEach((promise) => promise.reject(refreshError));
                     failedQueue = []; // Clear the queue
                 }); // Send refresh token
@@ -104,6 +108,8 @@ api.interceptors.response.use((response) => response, async (error) => {
             // Handle refresh token failure (e.g., redirect to login)
             processQueue(refreshError, null);
             await deleteLoginData();
+            router.replace("/login");
+
             return Promise.reject(refreshError);
         } finally {
             isRefreshing = false; // Reset the refreshing flag
@@ -111,6 +117,8 @@ api.interceptors.response.use((response) => response, async (error) => {
     }
     if (error?.response?.status === 401) {
         await deleteLoginData();
+        router.replace("/login");
+
     }
     if (error?.code === "ECONNABORTED" || error?.status === 500 || error?.response?.status === 500) {
         // window.location.replace('/500')
